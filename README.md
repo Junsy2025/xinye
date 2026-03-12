@@ -50,7 +50,7 @@ npm run dist
 打包完成后，安装包位于 `dist` 目录下，通常类似：
 
 ```
-dist\心悦 Setup.exe
+dist\xinye.exe
 ```
 
 3. 安装说明

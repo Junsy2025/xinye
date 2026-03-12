@@ -19,10 +19,11 @@
   },
   "build": {
     "appId": "com.local.musicplayer",
-    "productName": "心悦",
+    "productName": "xinye",
     "asar": true,
     "win": {
-      "icon": "images/logo.png"
+      "icon": "images/logo.png",
+      "artifactName": "xinye.${ext}"
     },
     "directories": {
       "output": "dist"
