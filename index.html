@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>心悦</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <img class="app-logo" src="images/logo.png" alt="Logo" />
+          <span class="app-title">心悦</span>
+        </div>
+        <div class="titlebar-center" id="nav-center">
+          <div class="nav-text" id="nav-text"></div>
+        </div>
+        <div class="titlebar-right">
+          <button class="title-btn icon" id="open-settings" title="设置">
+            <i class="bi bi-gear"></i>
+          </button>
+          <button class="title-btn" id="minimize-btn" title="最小化">_</button>
+          <button class="title-btn icon" id="maximize-btn" title="最大化">
+            <i class="bi bi-arrows-angle-expand"></i>
+          </button>
+          <button class="title-btn close" id="close-btn" title="关闭">X</button>
+        </div>
+      </div>
+
+      <div class="layout">
+        <main class="main-view" id="main-view">
+          <section class="player-area">
+            <div class="player-left">
+              <div class="turntable">
+                <div class="vinyl" id="vinyl">
+                  <div class="vinyl-core" id="cover">
+                    <img id="cover-img" alt="封面" />
+                    <div class="cover-fallback">♪</div>
+                  </div>
+                </div>
+                <div class="needle"></div>
+              </div>
+              <div class="track-meta">
+                <div id="now-title" class="title">选择一首歌开始播放</div>
+                <div id="now-meta" class="meta">等待加载歌曲信息</div>
+              </div>
+            </div>
+
+            <div class="lyrics-panel" id="lyrics-panel">
+              <div class="lyrics-body" id="lyrics-body"></div>
+              <div class="lyrics-empty" id="lyrics-empty">未找到歌词文件</div>
+            </div>
+          </section>
+
+          <section class="playlist-panel" id="playlist-panel">
+            <div class="playlist-header">
+              <h2>播放列表</h2>
+              <div class="playlist-actions">
+                <button class="icon-btn" id="rescan" title="重新扫描">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+                <span class="count" id="track-count">0 首</span>
+              </div>
+            </div>
+            <div class="playlist-tools">
+              <input
+                class="search"
+                id="search"
+                type="search"
+                placeholder="搜索标题 / 艺术家 / 专辑"
+              />
+            </div>
+            <div class="scan-status" id="scan-status">等待扫描</div>
+            <div class="list" id="track-list"></div>
+            <div class="empty" id="empty-state">未找到音乐文件</div>
+          </section>
+
+          <audio id="audio"></audio>
+        </main>
+
+        <section class="control-bar">
+          <div class="control-buttons">
+            <button class="icon-btn" id="prev-track" title="上一曲">
+              <i class="bi bi-skip-backward-fill"></i>
+            </button>
+            <button class="icon-btn primary" id="play-toggle" title="播放">
+              <i class="bi bi-play-fill"></i>
+            </button>
+            <button class="icon-btn" id="next-track" title="下一曲">
+              <i class="bi bi-skip-forward-fill"></i>
+            </button>
+          </div>
+          <div class="progress-group">
+            <span class="time" id="current-time">0:00</span>
+            <input
+              type="range"
+              id="progress"
+              min="0"
+              max="0"
+              step="0.1"
+              value="0"
+            />
+            <span class="time" id="duration">0:00</span>
+          </div>
+          <div class="volume-group">
+            <button class="icon-btn" id="mute-toggle" title="静音">
+              <i class="bi bi-volume-up"></i>
+            </button>
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
+          </div>
+          <div class="mode-group">
+            <button class="icon-btn" id="mode-toggle" title="列表循环">
+              <i class="bi bi-repeat"></i>
+            </button>
+            <button class="icon-btn" id="toggle-lyrics" title="歌词">
+              <i class="bi bi-card-text"></i>
+            </button>
+          </div>
+          <button class="icon-btn" id="toggle-playlist" title="播放列表">
+            <i class="bi bi-music-note-list"></i>
+          </button>
+        </section>
+
+        <section class="settings-view" id="settings-view">
+          <div class="settings-header">
+            <h2>设置</h2>
+            <button class="btn ghost" id="close-settings">返回播放</button>
+          </div>
+          <div class="settings-list">
+            <h3>文件与目录</h3>
+            <div class="setting-item">
+              <span>音乐扫描目录</span>
+              <div class="setting-control path-input">
+                <input id="setting-music-path" type="text" placeholder="选择音乐目录" />
+                <button class="path-icon" id="setting-music-btn" title="选择目录">
+                  <i class="bi bi-folder2-open"></i>
+                </button>
+              </div>
+            </div>
+            <div class="setting-item">
+              <span>歌词扫描目录</span>
+              <div class="setting-control path-input">
+                <input id="setting-lyrics-path" type="text" placeholder="选择歌词目录" />
+                <button class="path-icon" id="setting-lyrics-btn" title="选择目录">
+                  <i class="bi bi-folder2-open"></i>
+                </button>
+              </div>
+            </div>
+
+            <h3>界面</h3>
+            <div class="setting-item">
+              <span>歌词默认显示</span>
+              <div class="setting-control">
+                <input type="checkbox" id="setting-show-lyrics" />
+              </div>
+            </div>
+            <div class="setting-item">
+              <span>紧凑列表模式</span>
+              <div class="setting-control">
+                <input type="checkbox" id="setting-compact" />
+              </div>
+            </div>
+            <div class="setting-item">
+              <span>主题色</span>
+              <div class="setting-control">
+                <select id="setting-accent">
+                  <option value="cloud">云灰</option>
+                  <option value="sand">沙砾</option>
+                  <option value="sage">雾绿</option>
+                  <option value="ocean">海蓝</option>
+                  <option value="graphite">石墨</option>
+                </select>
+              </div>
+            </div>
+
+            <h3>播放</h3>
+            <div class="setting-item">
+              <span>记住音量</span>
+              <div class="setting-control">
+                <input type="checkbox" id="setting-remember-volume" />
+              </div>
+            </div>
+            <div class="setting-item">
+              <span>默认音量</span>
+              <div class="setting-control">
+                <input type="range" id="setting-volume" min="0" max="1" step="0.01" />
+              </div>
+            </div>
+            <div class="setting-item">
+              <span>默认排序</span>
+              <div class="setting-control">
+                <select id="setting-default-sort">
+                  <option value="name">按标题</option>
+                  <option value="artist">按艺术家</option>
+                  <option value="album">按专辑</option>
+                  <option value="duration">按时长</option>
+                  <option value="recent">按最近添加</option>
+                </select>
+              </div>
+            </div>
+
+            <h3>程序行为</h3>
+            <div class="setting-item">
+              <span>关闭行为</span>
+              <div class="setting-control radio-group" id="setting-close-behavior">
+                <label class="radio-option">
+                  <input type="radio" name="setting-close" value="minimize" />
+                  最小化
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="setting-close" value="exit" />
+                  退出程序
+                </label>
+              </div>
+            </div>
+
+            <h3>快捷键</h3>
+            <div class="shortcut-row">
+              <span>上一曲</span>
+              <input id="setting-shortcut-prev" type="text" readonly />
+            </div>
+            <div class="shortcut-row">
+              <span>下一曲</span>
+              <input id="setting-shortcut-next" type="text" readonly />
+            </div>
+            <div class="shortcut-row">
+              <span>音量调大</span>
+              <input id="setting-shortcut-volume-up" type="text" readonly />
+            </div>
+            <div class="shortcut-row">
+              <span>音量调小</span>
+              <input id="setting-shortcut-volume-down" type="text" readonly />
+            </div>
+            <div class="shortcut-hint">点击输入框后按组合键保存</div>
+          </div>
+          <div class="settings-note">设置会自动保存到安装目录 setting/settings.json</div>
+        </section>
+      </div>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
